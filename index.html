@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ประธานหลิน 67 — พรรคนักเรียน โรงเรียนหนองฮีเจริญวิทย์</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Firebase SDK (compat build — ใช้งานง่ายแบบ script tag ตรงๆ ไม่ต้องตั้ง build tool) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+  :root{
+    --navy-deep:#0A1F44;
+    --navy-mid:#15336B;
+    --navy-soft:#1F3F73;
+    --gold:#D4A017;
+    --gold-light:#F5C242;
+    --cream:#F8F7F3;
+    --ink:#1C1C1C;
+    --ink-soft:#4A4A4A;
+    --line:rgba(212,160,23,0.25);
+    --shadow-navy: 0 20px 60px -20px rgba(10,31,68,0.45);
+    --radius: 14px;
+    --display: "Bai Jamjuree", sans-serif;
+    --body: "Sarabun", sans-serif;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--body);
+    color:var(--ink);
+    background:var(--cream);
+    overflow-x:hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+
+  a{color:inherit; text-decoration:none;}
+  img,svg{display:block;}
+  .container{max-width:1180px; margin:0 auto; padding:0 28px;}
+  .eyebrow{
+    font-family:var(--display);
+    font-size:13px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px; height:1px;
+    background:var(--gold);
+    display:inline-block;
+  }
+  h1,h2,h3{font-family:var(--display); line-height:1.18; font-weight:700;}
+  .section{padding:96px 0;}
+  .section-tight{padding:64px 0;}
+
+  /* ===== NAV ===== */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(10,31,68,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(212,160,23,0.18);
+  }
+  .nav-inner{
+    max-width:1180px; margin:0 auto; padding:14px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .nav-brand{
+    display:flex; align-items:center; gap:10px;
+    font-family:var(--display); color:var(--cream); font-weight:700; font-size:17px;
+  }
+  .nav-brand .crest-mini{width:30px; height:30px;}
+  .nav-links{display:flex; gap:28px; font-size:14.5px; color:rgba(248,247,243,0.78);}
+  .nav-links a{transition:color .2s ease; position:relative;}
+  .nav-links a:hover{color:var(--gold-light);}
+  .nav-links a:focus-visible, a:focus-visible{outline:2px solid var(--gold-light); outline-offset:3px; border-radius:3px;}
+  .nav-cta{
+    background:var(--gold); color:var(--navy-deep); font-family:var(--display); font-weight:600;
+    font-size:13.5px; padding:9px 18px; border-radius:30px; border:none; cursor:pointer;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .nav-cta:hover{transform:translateY(-1px); box-shadow:0 8px 20px -6px rgba(212,160,23,0.6);}
+  .mobile-toggle{display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:6px;}
+  .mobile-toggle span{width:22px; height:2px; background:var(--cream); border-radius:2px;}
+
+  @media (max-width:840px){
+    .nav-links{display:none;}
+    .mobile-toggle{display:flex;}
+    .nav-links.open{
+      display:flex; flex-direction:column; position:absolute; top:100%; left:0; right:0;
+      background:var(--navy-deep); padding:18px 28px; gap:16px; border-bottom:1px solid var(--line);
+    }
+  }
+
+  /* ===== HERO ===== */
+  .hero{
+    position:relative;
+    background:
+      radial-gradient(ellipse 900px 500px at 18% -10%, rgba(212,160,23,0.16), transparent 60%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--navy-mid) 55%, var(--navy-soft) 100%);
+    color:var(--cream);
+    padding:168px 0 120px;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(248,247,243,0.025) 0px, rgba(248,247,243,0.025) 1px, transparent 1px, transparent 64px),
+      repeating-linear-gradient(90deg, rgba(248,247,243,0.025) 0px, rgba(248,247,243,0.025) 1px, transparent 1px, transparent 64px);
+    pointer-events:none;
+  }
+  .hero-grid{
+    position:relative; z-index:2;
+    display:grid; grid-template-columns:1.15fr 0.85fr; gap:56px; align-items:center;
+  }
+  @media (max-width:900px){.hero-grid{grid-template-columns:1fr; text-align:center;}}
+
+  .hero-seal-tag{
+    display:inline-flex; align-items:center; gap:10px;
+    border:1px solid rgba(212,160,23,0.4);
+    border-radius:30px; padding:7px 16px 7px 8px;
+    font-size:13px; color:var(--gold-light); margin-bottom:28px;
+    opacity:0; animation:fadeUp .7s ease forwards; animation-delay:.1s;
+  }
+  .hero-seal-tag .dot{width:7px; height:7px; border-radius:50%; background:var(--gold-light); box-shadow:0 0 0 0 rgba(245,194,66,0.7); animation:pulseDot 2.2s infinite;}
+  @keyframes pulseDot{
+    0%{box-shadow:0 0 0 0 rgba(245,194,66,0.55);}
+    70%{box-shadow:0 0 0 9px rgba(245,194,66,0);}
+    100%{box-shadow:0 0 0 0 rgba(245,194,66,0);}
+  }
+
+  .hero h1{
+    font-size:clamp(40px, 5.4vw, 68px);
+    letter-spacing:-0.01em;
+    opacity:0; animation:fadeUp .8s ease forwards; animation-delay:.22s;
+  }
+  .hero h1 .accent{color:var(--gold-light);}
+  .hero-sub{
+    font-size:18px; color:rgba(248,247,243,0.82); margin-top:22px; max-width:540px; line-height:1.65;
+    opacity:0; animation:fadeUp .8s ease forwards; animation-delay:.36s;
+  }
+  @media (max-width:900px){.hero-sub{margin-left:auto; margin-right:auto;}}
+
+  .hero-actions{
+    display:flex; gap:14px; margin-top:38px; flex-wrap:wrap;
+    opacity:0; animation:fadeUp .8s ease forwards; animation-delay:.5s;
+  }
+  @media (max-width:900px){.hero-actions{justify-content:center;}}
+  .btn-primary{
+    background:var(--gold); color:var(--navy-deep); font-family:var(--display); font-weight:600; font-size:15px;
+    padding:14px 30px; border-radius:30px; border:none; cursor:pointer;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 14px 30px -10px rgba(212,160,23,0.55);}
+  .btn-ghost{
+    background:transparent; color:var(--cream); border:1px solid rgba(248,247,243,0.35);
+    font-family:var(--display); font-weight:500; font-size:15px; padding:14px 28px; border-radius:30px; cursor:pointer;
+    transition:border-color .25s ease, background .25s ease;
+  }
+  .btn-ghost:hover{border-color:var(--gold-light); background:rgba(248,247,243,0.06);}
+
+  .hero-stats{
+    display:flex; gap:34px; margin-top:52px; flex-wrap:wrap;
+    opacity:0; animation:fadeUp .8s ease forwards; animation-delay:.64s;
+  }
+  @media (max-width:900px){.hero-stats{justify-content:center;}}
+  .hero-stat b{font-family:var(--display); font-size:26px; color:var(--gold-light); display:block;}
+  .hero-stat span{font-size:13px; color:rgba(248,247,243,0.65);}
+
+  @keyframes fadeUp{from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:translateY(0);}}
+
+  /* ===== CREST (signature element) ===== */
+  .crest-wrap{position:relative; display:flex; justify-content:center; z-index:2;}
+  .crest-wrap svg{width:min(360px, 84vw); height:auto; filter:drop-shadow(0 30px 50px rgba(0,0,0,0.35));}
+  .crest-ring{animation:slowSpin 36s linear infinite;}
+  @keyframes slowSpin{from{transform:rotate(0deg);} to{transform:rotate(360deg);}}
+  .crest-glow{
+    position:absolute; width:420px; height:420px; border-radius:50%;
+    background:radial-gradient(circle, rgba(212,160,23,0.22), transparent 70%);
+    top:50%; left:50%; transform:translate(-50%,-50%); z-index:-1;
+  }
+
+  /* ===== SECTION HEADERS ===== */
+  .section-head{max-width:640px; margin-bottom:52px;}
+  .section-head h2{font-size:clamp(28px,3.4vw,40px); margin-top:14px; color:var(--navy-deep);}
+  .section-head p{font-size:16px; color:var(--ink-soft); margin-top:14px; line-height:1.7;}
+
+  /* ===== ABOUT ===== */
+  .about-grid{display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:start;}
+  @media (max-width:880px){.about-grid{grid-template-columns:1fr; gap:40px;}}
+  .about-text p{font-size:16px; color:var(--ink-soft); line-height:1.85; margin-bottom:18px;}
+  .about-text strong{color:var(--navy-deep);}
+
+  .pillars{display:flex; flex-direction:column; gap:0;}
+  .pillar{
+    display:flex; gap:18px; padding:22px 0; border-bottom:1px solid var(--line);
+  }
+  .pillar:last-child{border-bottom:none;}
+  .pillar-num{
+    font-family:var(--display); font-weight:700; font-size:14px; color:var(--gold);
+    border:1.5px solid var(--gold); width:38px; height:38px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .pillar h3{font-size:17px; color:var(--navy-deep); margin-bottom:6px;}
+  .pillar p{font-size:14.5px; color:var(--ink-soft); line-height:1.6;}
+
+  /* ===== ESPORT — hero policy ===== */
+  .esport-section{
+    background:linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-mid) 100%);
+    color:var(--cream);
+    position:relative;
+    overflow:hidden;
+  }
+  .esport-section::after{
+    content:"";
+    position:absolute; top:-20%; right:-10%; width:600px; height:600px; border-radius:50%;
+    background:radial-gradient(circle, rgba(212,160,23,0.12), transparent 70%);
+  }
+  .esport-head{position:relative; z-index:2; text-align:center; max-width:680px; margin:0 auto 60px;}
+  .esport-head .eyebrow{justify-content:center;}
+  .esport-head .eyebrow::before{display:none;}
+  .esport-head h2{font-size:clamp(30px,4vw,46px); color:var(--cream); margin-top:14px;}
+  .esport-head h2 .gold{color:var(--gold-light);}
+  .esport-head p{color:rgba(248,247,243,0.78); margin-top:16px; font-size:16px; line-height:1.7;}
+
+  .game-grid{
+    position:relative; z-index:2;
+    display:grid; grid-template-columns:repeat(5, 1fr); gap:20px;
+  }
+  @media (max-width:980px){.game-grid{grid-template-columns:repeat(3,1fr);}}
+  @media (max-width:620px){.game-grid{grid-template-columns:repeat(2,1fr);}}
+
+  .game-card{
+    background:rgba(248,247,243,0.05);
+    border:1px solid rgba(212,160,23,0.22);
+    border-radius:var(--radius);
+    padding:28px 18px 22px;
+    text-align:center;
+    transition:transform .3s ease, border-color .3s ease, background .3s ease;
+  }
+  .game-card:hover{
+    transform:translateY(-6px);
+    border-color:rgba(212,160,23,0.6);
+    background:rgba(248,247,243,0.09);
+  }
+  .game-card .icon-wrap{
+    width:58px; height:58px; margin:0 auto 16px;
+    border-radius:14px;
+    background:linear-gradient(155deg, rgba(212,160,23,0.22), rgba(212,160,23,0.06));
+    display:flex; align-items:center; justify-content:center;
+  }
+  .game-card .icon-wrap svg{width:30px; height:30px;}
+  .game-card h3{font-family:var(--display); font-size:15.5px; color:var(--cream); font-weight:600;}
+  .game-card span{font-size:12px; color:rgba(248,247,243,0.55); display:block; margin-top:4px;}
+
+  .esport-note{
+    position:relative; z-index:2;
+    margin-top:48px; text-align:center; font-size:14px; color:rgba(248,247,243,0.6);
+    border-top:1px solid rgba(212,160,23,0.2); padding-top:28px; max-width:680px; margin-left:auto; margin-right:auto;
+  }
+
+  /* ===== POLICIES GRID ===== */
+  .policy-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:26px;
+  }
+  @media (max-width:900px){.policy-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:620px){.policy-grid{grid-template-columns:1fr;}}
+
+  .policy-card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:30px 26px;
+    transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  }
+  .policy-card:hover{
+    transform:translateY(-5px);
+    box-shadow:var(--shadow-navy);
+    border-color:rgba(212,160,23,0.5);
+  }
+  .policy-icon{
+    width:48px; height:48px; border-radius:12px;
+    background:linear-gradient(155deg, var(--navy-deep), var(--navy-soft));
+    display:flex; align-items:center; justify-content:center; margin-bottom:18px;
+  }
+  .policy-icon svg{width:24px; height:24px; stroke:var(--gold-light);}
+  .policy-card h3{font-size:17px; color:var(--navy-deep); margin-bottom:8px;}
+  .policy-card p{font-size:14.5px; color:var(--ink-soft); line-height:1.65;}
+
+  /* ===== VOTE / SURVEY ===== */
+  .vote-section{background:var(--navy-deep); position:relative; overflow:hidden;}
+  .vote-section .container{position:relative; z-index:2;}
+  .vote-wrap{
+    display:grid; grid-template-columns:0.9fr 1.1fr; gap:60px; align-items:start;
+  }
+  @media (max-width:900px){.vote-wrap{grid-template-columns:1fr; gap:40px;}}
+
+  .vote-intro .eyebrow{color:var(--gold-light);}
+  .vote-intro h2{font-size:clamp(28px,3.4vw,38px); color:var(--cream); margin-top:14px;}
+  .vote-intro p{color:rgba(248,247,243,0.75); margin-top:16px; font-size:15.5px; line-height:1.75;}
+  .vote-meta{
+    margin-top:30px; display:flex; gap:14px; padding:18px; background:rgba(248,247,243,0.05);
+    border:1px solid rgba(212,160,23,0.2); border-radius:var(--radius); font-size:13.5px; color:rgba(248,247,243,0.7);
+    line-height:1.6;
+  }
+  .vote-meta svg{flex-shrink:0; margin-top:2px; width:18px; height:18px; stroke:var(--gold-light);}
+
+  .vote-card{
+    background:var(--cream); border-radius:18px; padding:34px;
+    box-shadow:0 30px 70px -20px rgba(0,0,0,0.5);
+  }
+  .vote-card h3{color:var(--navy-deep); font-size:19px; margin-bottom:6px;}
+  .vote-card .vote-sub{font-size:13.5px; color:var(--ink-soft); margin-bottom:24px;}
+
+  .vote-options{display:flex; flex-direction:column; gap:12px;}
+  .vote-option{
+    position:relative;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    padding:14px 16px;
+    cursor:pointer;
+    overflow:hidden;
+    transition:border-color .25s ease;
+    background:#fff;
+  }
+  .vote-option:hover{border-color:var(--gold);}
+  .vote-option.voted{cursor:default;}
+  .vote-option .bar-fill{
+    position:absolute; top:0; left:0; bottom:0;
+    background:linear-gradient(90deg, rgba(212,160,23,0.16), rgba(212,160,23,0.06));
+    width:0%; transition:width .8s ease;
+    z-index:0;
+  }
+  .vote-option-row{position:relative; z-index:1; display:flex; justify-content:space-between; align-items:center; gap:10px;}
+  .vote-option-label{font-size:14.5px; font-weight:500; color:var(--ink);}
+  .vote-option-pct{font-family:var(--display); font-size:13.5px; color:var(--navy-deep); font-weight:700; opacity:0; transition:opacity .3s ease;}
+  .vote-option.voted .vote-option-pct{opacity:1;}
+
+  .vote-status{
+    margin-top:18px; font-size:13px; color:var(--ink-soft); min-height:18px;
+  }
+  .vote-status.success{color:#1a7a3d; font-weight:500;}
+  .vote-reset{
+    margin-top:14px; font-size:12.5px; color:var(--gold); background:none; border:none; cursor:pointer;
+    text-decoration:underline; padding:0;
+  }
+  .vote-reset:hover{color:var(--navy-deep);}
+
+  /* survey mini */
+  .survey-divider{margin:28px 0; border-top:1px dashed var(--line);}
+  .survey-q{font-size:14px; color:var(--navy-deep); font-weight:600; margin-bottom:12px;}
+  .survey-input{
+    width:100%; border:1.5px solid var(--line); border-radius:10px; padding:11px 14px;
+    font-family:var(--body); font-size:14px; resize:vertical; min-height:70px;
+    transition:border-color .2s ease;
+  }
+  .survey-input:focus{outline:none; border-color:var(--gold);}
+  .survey-submit{
+    margin-top:12px; background:var(--navy-deep); color:var(--cream); border:none; border-radius:30px;
+    padding:11px 24px; font-family:var(--display); font-weight:600; font-size:13.5px; cursor:pointer;
+    transition:background .2s ease;
+  }
+  .survey-submit:hover{background:var(--navy-soft);}
+  .survey-list{margin-top:18px; display:flex; flex-direction:column; gap:8px; max-height:180px; overflow-y:auto;}
+  .survey-item{
+    font-size:13px; color:var(--ink-soft); background:#fff; border:1px solid var(--line);
+    border-radius:8px; padding:9px 12px; line-height:1.5;
+  }
+  .survey-empty{font-size:13px; color:var(--ink-soft); opacity:0.7; font-style:italic;}
+
+  /* ===== FIREBASE SETUP BANNER (ลบ section นี้ทิ้งได้หลังตั้งค่า config เสร็จ) ===== */
+  .setup-banner{
+    background:#fff3cd; border:1.5px solid #e0b341; border-radius:10px;
+    padding:16px 18px; margin-bottom:20px; font-size:13px; color:#5a4400; line-height:1.65;
+    display:none;
+  }
+  .setup-banner.show{display:block;}
+  .setup-banner strong{display:block; margin-bottom:6px; font-size:13.5px;}
+  .setup-banner code{background:rgba(0,0,0,0.06); padding:2px 5px; border-radius:4px; font-size:12px;}
+
+  .live-pulse{
+    display:inline-flex; align-items:center; gap:6px; font-size:11.5px; color:#1a7a3d; font-weight:600;
+  }
+  .live-pulse .dot{width:6px; height:6px; border-radius:50%; background:#1a7a3d; animation:pulseDot 2s infinite;}
+
+  /* ===== TEAM / CANDIDATE ===== */
+  .leader-banner{
+    background:linear-gradient(155deg, var(--gold) 0%, var(--gold-light) 100%);
+    border-radius:20px; padding:46px 42px;
+    display:grid; grid-template-columns:auto 1fr; gap:34px; align-items:center;
+  }
+  @media (max-width:760px){.leader-banner{grid-template-columns:1fr; text-align:center; padding:38px 26px;}}
+  .leader-portrait{
+    width:120px; height:120px; border-radius:50%;
+    background:var(--navy-deep); display:flex; align-items:center; justify-content:center;
+    border:4px solid rgba(255,255,255,0.5);
+  }
+  @media (max-width:760px){.leader-portrait{margin:0 auto;}}
+  .leader-portrait svg{width:58px; height:58px;}
+  .leader-banner h3{color:var(--navy-deep); font-size:23px;}
+  .leader-banner .role{font-family:var(--display); font-size:13px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:rgba(10,31,68,0.65); margin-bottom:6px;}
+  .leader-banner p{color:rgba(10,31,68,0.78); font-size:14.5px; margin-top:10px; line-height:1.6; max-width:560px;}
+
+  /* ===== FOOTER / CTA ===== */
+  .closer{
+    background:linear-gradient(155deg, var(--navy-deep), var(--navy-mid));
+    color:var(--cream); text-align:center; padding:100px 0 70px; position:relative; overflow:hidden;
+  }
+  .closer::before{
+    content:""; position:absolute; bottom:-30%; left:50%; transform:translateX(-50%);
+    width:700px; height:700px; border-radius:50%;
+    background:radial-gradient(circle, rgba(212,160,23,0.14), transparent 70%);
+  }
+  .closer-content{position:relative; z-index:2;}
+  .closer .small-crest{width:64px; height:64px; margin:0 auto 26px;}
+  .closer h2{font-size:clamp(26px,3.4vw,38px);}
+  .closer p{color:rgba(248,247,243,0.72); margin-top:14px; font-size:15.5px; max-width:520px; margin-left:auto; margin-right:auto; line-height:1.7;}
+  .closer-actions{display:flex; gap:14px; justify-content:center; margin-top:34px; flex-wrap:wrap;}
+
+  footer{background:var(--navy-deep); border-top:1px solid rgba(212,160,23,0.18); padding:34px 0; color:rgba(248,247,243,0.55); font-size:13px;}
+  .footer-row{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;}
+
+  /* scroll reveal */
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  ::selection{background:var(--gold-light); color:var(--navy-deep);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <svg class="crest-mini" viewBox="0 0 60 60" fill="none">
+        <circle cx="30" cy="30" r="28" stroke="#D4A017" stroke-width="2"/>
+        <path d="M30 14 L42 22 V36 L30 46 L18 36 V22 Z" stroke="#F5C242" stroke-width="1.6" fill="rgba(212,160,23,0.12)"/>
+        <circle cx="30" cy="30" r="6" fill="#D4A017"/>
+      </svg>
+      ประธานหลิน 67
+    </div>
+    <div class="nav-links" id="navLinks">
+      <a href="#about">เกี่ยวกับพรรค</a>
+      <a href="#esport">นโยบาย E-Sport</a>
+      <a href="#policies">นโยบายอื่นๆ</a>
+      <a href="#vote">โหวต/แบบสอบถาม</a>
+      <a href="#team">ทีมผู้สมัคร</a>
+    </div>
+    <button class="nav-cta" onclick="document.getElementById('vote').scrollIntoView()">ร่วมโหวตเลย</button>
+    <button class="mobile-toggle" id="mobileToggle" aria-label="เปิดเมนู">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="hero-seal-tag"><span class="dot"></span> แคมเปญเลือกตั้งประธานสภานักเรียน ปีการศึกษา 2567</div>
+      <h1>ประธานหลิน <span class="accent">67</span><br>เสียงของนักเรียน คือทิศทางของโรงเรียน</h1>
+      <p class="hero-sub">พรรคที่เชื่อว่ากิจกรรมและความสุขในโรงเรียนสร้างวินัยและความสามัคคีได้จริง พร้อมผลักดันสนาม E-Sport แห่งแรกของโรงเรียนหนองฮีเจริญวิทย์ และนโยบายพื้นฐานที่จับต้องได้ในทุกวัน</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="document.getElementById('esport').scrollIntoView()">ดูนโยบาย E-Sport</button>
+        <button class="btn-ghost" onclick="document.getElementById('vote').scrollIntoView()">โหวตให้เรา</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><b>5</b><span>เกมแข่งขัน E-Sport</span></div>
+        <div class="hero-stat"><b>6</b><span>นโยบายหลัก</span></div>
+        <div class="hero-stat"><b>เบอร์ 1</b><span>หมายเลขผู้สมัครพรรค</span></div>
+      </div>
+    </div>
+    <div class="crest-wrap">
+      <div class="crest-glow"></div>
+      <svg viewBox="0 0 400 460" fill="none">
+        <g class="crest-ring" style="transform-origin:200px 200px;">
+          <circle cx="200" cy="190" r="175" stroke="#D4A017" stroke-width="1.5" stroke-dasharray="4 10" opacity="0.55"/>
+        </g>
+        <circle cx="200" cy="190" r="150" fill="rgba(248,247,243,0.04)" stroke="#D4A017" stroke-width="2.5"/>
+        <circle cx="200" cy="190" r="150" fill="none" stroke="#F5C242" stroke-width="1" opacity="0.4" stroke-dasharray="2 6"/>
+        <!-- shield -->
+        <path d="M200 95 L268 122 V210 C268 260 240 296 200 318 C160 296 132 260 132 210 V122 Z"
+              fill="rgba(212,160,23,0.14)" stroke="#D4A017" stroke-width="2.5"/>
+        <!-- controller emblem -->
+        <g transform="translate(200,205)">
+          <rect x="-58" y="-26" width="116" height="58" rx="26" fill="#F5C242"/>
+          <circle cx="-30" cy="3" r="9" fill="#0A1F44"/>
+          <rect x="-34" y="-1" width="8" height="8" fill="#F5C242"/>
+          <rect x="-34" y="-1" width="8" height="8" fill="#0A1F44" opacity="0"/>
+          <line x1="-30" y1="-7" x2="-30" y2="13" stroke="#0A1F44" stroke-width="3.4" stroke-linecap="round"/>
+          <line x1="-40" y1="3" x2="-20" y2="3" stroke="#0A1F44" stroke-width="3.4" stroke-linecap="round"/>
+          <circle cx="22" cy="-6" r="6.5" fill="#0A1F44"/>
+          <circle cx="34" cy="8" r="6.5" fill="#0A1F44"/>
+          <circle cx="34" cy="-6" r="6.5" fill="#15336B" opacity="0.5"/>
+          <circle cx="22" cy="8" r="6.5" fill="#15336B" opacity="0.5"/>
+        </g>
+        <!-- ribbon -->
+        <path d="M120 318 L160 290 L160 380 L140 396 Z" fill="#0A1F44"/>
+        <path d="M280 318 L240 290 L240 380 L260 396 Z" fill="#0A1F44"/>
+        <rect x="140" y="350" width="120" height="46" rx="6" fill="#15336B" stroke="#D4A017" stroke-width="1.5"/>
+        <text x="200" y="378" text-anchor="middle" font-family="Bai Jamjuree, sans-serif" font-size="20" font-weight="700" fill="#F5C242">หลิน 67</text>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<!-- ===== ABOUT ===== -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="reveal">
+        <div class="eyebrow">เกี่ยวกับพรรค</div>
+        <h2 style="color:var(--navy-deep); font-size:clamp(28px,3.4vw,38px); margin-top:14px;">พรรคที่ฟังเสียงนักเรียน<br>ก่อนตัดสินใจทุกเรื่อง</h2>
+        <div class="about-text" style="margin-top:24px;">
+          <p><strong>ประธานหลิน 67</strong> ก่อตั้งขึ้นจากแนวคิดง่ายๆ ว่า โรงเรียนจะน่าอยู่ขึ้นได้ ถ้านักเรียนทุกคนมีส่วนร่วมในการกำหนดทิศทางกิจกรรมของตัวเอง พรรคของเราเชื่อในความสมดุลระหว่างการเรียนและกิจกรรม โดยใช้ E-Sport เป็นจุดเริ่มต้นสร้างความสามัคคี วินัย และทักษะการทำงานเป็นทีม</p>
+          <p>เราตั้งใจทำให้ทุกนโยบายตรวจสอบได้ จับต้องได้ และนำไปใช้จริงในโรงเรียนหนองฮีเจริญวิทย์ ไม่ใช่แค่คำสัญญาบนกระดาษ</p>
+        </div>
+      </div>
+      <div class="pillars reveal">
+        <div class="pillar">
+          <div class="pillar-num">01</div>
+          <div><h3>โปร่งใส</h3><p>เปิดเผยนโยบายและความคืบหน้าให้ตรวจสอบได้ตลอดปีการศึกษา</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">02</div>
+          <div><h3>มีส่วนร่วม</h3><p>เปิดระบบโหวตและรับฟังความเห็นนักเรียนก่อนผลักดันทุกโครงการ</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">03</div>
+          <div><h3>ทำได้จริง</h3><p>เลือกนโยบายที่ใช้ทรัพยากรของโรงเรียนได้จริง ไม่ใช่แค่ฝันไกลเกินตัว</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== E-SPORT (HERO POLICY) ===== -->
+<section class="section esport-section" id="esport">
+  <div class="container">
+    <div class="esport-head reveal">
+      <div class="eyebrow">นโยบายหลัก</div>
+      <h2>สนามรบดิจิทัลแห่งแรก<br><span class="gold">การแข่งขัน E-Sport ภายในโรงเรียน</span></h2>
+      <p>จัดการแข่งขัน E-Sport ประจำปีในโรงเรียน เปิดให้นักเรียนทุกระดับชั้นรวมทีมแข่งขันอย่างเป็นระบบ มีกรรมการ กฎการแข่งขัน และของรางวัลที่ชัดเจน เพื่อให้ทักษะที่หลายคนมีอยู่แล้วได้ใช้สร้างชื่อเสียงให้ตัวเองและโรงเรียน</p>
+    </div>
+
+    <div class="game-grid reveal">
+      <div class="game-card">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#F5C242" stroke-width="1.8"><rect x="2" y="7" width="20" height="11" rx="4"/><circle cx="8" cy="12.5" r="1.4" fill="#F5C242" stroke="none"/><circle cx="6" cy="12.5" r="0" /><path d="M7 11v3M5.5 12.5h3"/><circle cx="16" cy="11" r="1.1" fill="#F5C242" stroke="none"/><circle cx="18.5" cy="13.5" r="1.1" fill="#F5C242" stroke="none"/></svg>
+        </div>
+        <h3>ROV</h3><span>5v5 Battle Arena</span>
+      </div>
+      <div class="game-card">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#F5C242" stroke-width="1.8"><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <h3>Free Fire</h3><span>Battle Royale</span>
+      </div>
+      <div class="game-card">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#F5C242" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+        </div>
+        <h3>eFootball</h3><span>1v1 / ทีม</span>
+      </div>
+      <div class="game-card">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#F5C242" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h.01M15 9h.01M9 15h6"/></svg>
+        </div>
+        <h3>Roblox</h3><span>Battle/สร้างสรรค์</span>
+      </div>
+      <div class="game-card">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#F5C242" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12v9M4 7.5l8 4.5 8-4.5"/></svg>
+        </div>
+        <h3>Minecraft</h3><span>สร้างสรรค์/แข่งเวลา</span>
+      </div>
+    </div>
+
+    <div class="esport-note reveal">
+      จัดเป็นทัวร์นาเมนต์แบบแบ่งสาย มีรอบคัดเลือกถึงรอบชิงชนะเลิศ ใช้ห้องคอมพิวเตอร์และอุปกรณ์ของโรงเรียนในเวลาที่เหมาะสม ไม่กระทบเวลาเรียน พร้อมประกาศผลและมอบของรางวัลในกิจกรรมหน้าเสาธง
+    </div>
+  </div>
+</section>
+
+<!-- ===== OTHER POLICIES ===== -->
+<section class="section" id="policies">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">นโยบายอื่นๆ</div>
+      <h2>เรื่องพื้นฐานที่ทุกคนสัมผัสได้ทุกวัน</h2>
+      <p>นอกเหนือจาก E-Sport พรรคของเรามีนโยบายพื้นฐานที่ตั้งใจทำให้ชีวิตในโรงเรียนสะดวกและน่าอยู่ขึ้น</p>
+    </div>
+
+    <div class="policy-grid reveal">
+      <div class="policy-card">
+        <div class="policy-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18M3 6h18M3 14h18M3 18h18"/></svg></div>
+        <h3>Wi-Fi เพื่อการเรียนรู้</h3>
+        <p>เพิ่มจุดปล่อยสัญญาณ Wi-Fi ในพื้นที่ส่วนกลาง สำหรับใช้ค้นหาข้อมูลและทำงานกลุ่มในเวลาพัก</p>
+      </div>
+      <div class="policy-card">
+        <div class="policy-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M7 14l4-4 3 3 5-6"/></svg></div>
+        <h3>ตู้ทำน้ำเย็น/น้ำดื่มเพิ่ม</h3>
+        <p>เพิ่มจุดตู้น้ำดื่มสะอาดให้เพียงพอต่อจำนวนนักเรียน ลดการรอคิวในช่วงเวลาพักและหลังเลิกเรียน</p>
+      </div>
+      <div class="policy-card">
+        <div class="policy-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+        <h3>กล่องเสนอความเห็นนักเรียน</h3>
+        <p>ติดตั้งกล่อง/ฟอร์มออนไลน์รับความเห็นและข้อร้องเรียน พร้อมรายงานผลการแก้ไขให้ทราบทุกเดือน</p>
+      </div>
+      <div class="policy-card">
+        <div class="policy-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 4v3"/></svg></div>
+        <h3>ปฏิทินกิจกรรมรวมศูนย์</h3>
+        <p>จัดทำตารางกิจกรรมและการแข่งขันทุกประเภทไว้ในที่เดียว ดูง่าย อัปเดตตรงกันทั้งโรงเรียน</p>
+      </div>
+      <div class="policy-card">
+        <div class="policy-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3z"/><path d="M3 7.5V16M21 7.5V16M7 11v5.5c0 1.5 2 3 5 3s5-1.5 5-3V11"/></svg></div>
+        <h3>คลังหนังสือ-อุปกรณ์หมุนเวียน</h3>
+        <p>เปิดมุมยืม-คืนแบบฝึกหัด อุปกรณ์กีฬา และเกมกระดานในเวลาว่าง โดยไม่มีค่าใช้จ่ายเพิ่ม</p>
+      </div>
+      <div class="policy-card">
+        <div class="policy-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a4.7 4.7 0 0 0-6.6 0L12 6.8l-2.2-2.2a4.7 4.7 0 0 0-6.6 6.6L12 20l8.8-8.8a4.7 4.7 0 0 0 0-6.6z"/></svg></div>
+        <h3>โซนพักผ่อนคลายความเครียด</h3>
+        <p>จัดมุมพักผ่อนเล็กๆ ในเวลาพัก สำหรับนักเรียนที่ต้องการพื้นที่เงียบสงบนอกเหนือจากกิจกรรม E-Sport</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== VOTE / SURVEY ===== -->
+<section class="section vote-section" id="vote">
+  <div class="container">
+    <div class="vote-wrap">
+      <div class="vote-intro reveal">
+        <div class="eyebrow">ร่วมเสียงกับเรา</div>
+        <h2>โหวต และบอกความเห็นของคุณ</h2>
+        <p>ก่อนวันเลือกตั้งจริง ลองสำรวจความเห็นกันก่อนว่าเกมไหนที่นักเรียนอยากแข่งมากที่สุด และอยากให้พรรคผลักดันเรื่องไหนเพิ่ม ผลโหวตจะแสดงผลรวมแบบเรียลไทม์ให้ทุกคนเห็นพร้อมกัน</p>
+        <div class="vote-meta">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+          <span>ผลโหวตและความเห็นนี้เป็นข้อมูลสาธารณะที่นักเรียนทุกคนที่เข้าเว็บนี้มองเห็นร่วมกัน เลือกได้ 1 ครั้งต่ออุปกรณ์</span>
+        </div>
+      </div>
+
+      <div class="vote-card reveal">
+        <div class="setup-banner" id="setupBanner">
+          <strong>⚠ ยังไม่ได้ตั้งค่า Firebase</strong>
+          เปิดไฟล์ index.html ด้วยโปรแกรมแก้ไขข้อความ ค้นหาคำว่า <code>const firebaseConfig</code> แล้วใส่ค่า config จาก Firebase Console ของคุณ (ดูวิธีทำในข้อความที่แชทอธิบายไว้)
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px;">
+          <h3 style="margin-bottom:0;">เกมที่อยากให้จัดแข่งมากที่สุด</h3>
+          <span class="live-pulse" id="livePulse" style="display:none;"><span class="dot"></span>LIVE</span>
+        </div>
+        <div class="vote-sub">เลือกได้ 1 ตัวเลือก — ผลรวมจากนักเรียนทุกคน อัปเดตทันที</div>
+
+        <div class="vote-options" id="voteOptions">
+          <div class="vote-option" data-game="ROV"><div class="bar-fill"></div><div class="vote-option-row"><span class="vote-option-label">ROV</span><span class="vote-option-pct">0%</span></div></div>
+          <div class="vote-option" data-game="Free Fire"><div class="bar-fill"></div><div class="vote-option-row"><span class="vote-option-label">Free Fire</span><span class="vote-option-pct">0%</span></div></div>
+          <div class="vote-option" data-game="eFootball"><div class="bar-fill"></div><div class="vote-option-row"><span class="vote-option-label">eFootball</span><span class="vote-option-pct">0%</span></div></div>
+          <div class="vote-option" data-game="Roblox"><div class="bar-fill"></div><div class="vote-option-row"><span class="vote-option-label">Roblox</span><span class="vote-option-pct">0%</span></div></div>
+          <div class="vote-option" data-game="Minecraft"><div class="bar-fill"></div><div class="vote-option-row"><span class="vote-option-label">Minecraft</span><span class="vote-option-pct">0%</span></div></div>
+        </div>
+        <div class="vote-status" id="voteStatus">กำลังโหลดผลโหวต...</div>
+        <button class="vote-reset" id="voteResetBtn" style="display:none;">โหวตใหม่ (เปลี่ยนตัวเลือก)</button>
+
+        <div class="survey-divider"></div>
+
+        <div class="survey-q">มีนโยบายอื่นที่อยากให้พรรคทำเพิ่มไหม? บอกเราได้เลย</div>
+        <textarea class="survey-input" id="surveyInput" placeholder="พิมพ์ความเห็นของคุณที่นี่..." maxlength="280"></textarea>
+        <button class="survey-submit" id="surveySubmitBtn">ส่งความเห็น</button>
+        <div class="survey-list" id="surveyList"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TEAM ===== -->
+<section class="section section-tight" id="team">
+  <div class="container">
+    <div class="leader-banner reveal">
+      <div class="leader-portrait">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#F5C242" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+      </div>
+      <div>
+        <div class="role">หัวหน้าพรรค — ผู้สมัครประธานสภานักเรียน</div>
+        <h3>หลิน — เบอร์ 1</h3>
+        <p>ตัวแทนนักเรียนที่เชื่อในพลังของกิจกรรมและการมีส่วนร่วม พร้อมผลักดันสนาม E-Sport และนโยบายพื้นฐานที่ทำได้จริงตลอดปีการศึกษา 2567</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CLOSER ===== -->
+<section class="closer" id="closer">
+  <div class="container closer-content">
+    <svg class="small-crest" viewBox="0 0 60 60" fill="none">
+      <circle cx="30" cy="30" r="27" stroke="#D4A017" stroke-width="2"/>
+      <path d="M30 12 L44 20 V36 L30 48 L16 36 V20 Z" stroke="#F5C242" stroke-width="1.6" fill="rgba(212,160,23,0.12)"/>
+      <circle cx="30" cy="30" r="7" fill="#D4A017"/>
+    </svg>
+    <h2>วันเลือกตั้ง เลือกเบอร์ 1</h2>
+    <p>ประธานหลิน 67 — เสียงของนักเรียน คือทิศทางของโรงเรียน ร่วมโหวตและส่งความเห็นของคุณวันนี้ ก่อนตัดสินใจในวันจริง</p>
+    <div class="closer-actions">
+      <button class="btn-primary" onclick="document.getElementById('vote').scrollIntoView()">ไปที่หน้าโหวต</button>
+      <button class="btn-ghost" onclick="document.getElementById('esport').scrollIntoView()">ดูนโยบาย E-Sport</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-row">
+    <span>© 2567 พรรคประธานหลิน 67 — โรงเรียนหนองฮีเจริญวิทย์</span>
+    <span>แคมเปญเลือกตั้งสภานักเรียน</span>
+  </div>
+</footer>
+
+<script>
+  // mobile nav
+  const toggle = document.getElementById('mobileToggle');
+  const navLinks = document.getElementById('navLinks');
+  toggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+
+  // ===========================================================
+  // FIREBASE SETUP — แก้ค่าตรงนี้ด้วยค่าจาก Firebase Console ของคุณ
+  // วิธีหาค่า: Firebase Console > โปรเจกต์ของคุณ > ไอคอนเฟือง > Project settings
+  // > เลื่อนลงไปที่ "Your apps" > เลือกแอป Web (</>) > จะเห็น firebaseConfig
+  // ===========================================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyD860mgEMDtjXLTe63V1YXtfBocQWXCx5k",
+    authDomain: "prathanlin-67.firebaseapp.com",
+    projectId: "prathanlin-67",
+    storageBucket: "prathanlin-67.firebasestorage.app",
+    messagingSenderId: "34138405548",
+    appId: "1:34138405548:web:de2998e59ca84d54873d09",
+    measurementId: "G-83BSSLTXDG"
+  };
+
+  const games = ['ROV','Free Fire','eFootball','Roblox','Minecraft'];
+  const voteOptionsEl = document.getElementById('voteOptions');
+  const voteStatusEl = document.getElementById('voteStatus');
+  const voteResetBtn = document.getElementById('voteResetBtn');
+  const setupBanner = document.getElementById('setupBanner');
+  const livePulse = document.getElementById('livePulse');
+
+  let db = null;
+  let firebaseReady = false;
+
+  function isConfigPlaceholder(){
+    return firebaseConfig.apiKey === "YOUR_API_KEY" || !firebaseConfig.apiKey;
+  }
+
+  try{
+    if(isConfigPlaceholder()){
+      setupBanner.classList.add('show');
+      voteStatusEl.textContent = 'ระบบโหวตยังไม่พร้อมใช้งาน — ผู้ดูแลเว็บต้องตั้งค่า Firebase ก่อน';
+    } else {
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.firestore();
+      firebaseReady = true;
+      livePulse.style.display = 'inline-flex';
+    }
+  }catch(err){
+    console.error('Firebase init error:', err);
+    setupBanner.classList.add('show');
+    setupBanner.querySelector('strong').textContent = '⚠ เชื่อมต่อ Firebase ไม่สำเร็จ';
+    voteStatusEl.textContent = 'เชื่อมต่อระบบโหวตไม่สำเร็จ ลองโหลดหน้าใหม่';
+  }
+
+  // ===== VOTE SYSTEM (Firestore, real-time) =====
+  const VOTED_FLAG_KEY = 'lin67_has_voted';
+  const VOTED_CHOICE_KEY = 'lin67_voted_choice';
+  const VOTE_DOC_REF = () => db.collection('lin67_campaign').doc('esport_votes');
+
+  function renderVotes(counts, highlightChoice){
+    const total = games.reduce((sum,g) => sum + (counts[g]||0), 0);
+    voteOptionsEl.querySelectorAll('.vote-option').forEach(opt => {
+      const game = opt.dataset.game;
+      const count = counts[game] || 0;
+      const pct = total > 0 ? Math.round((count/total)*100) : 0;
+      opt.querySelector('.bar-fill').style.width = pct + '%';
+      opt.querySelector('.vote-option-pct').textContent = pct + '% (' + count + ')';
+    });
+    voteOptionsEl.querySelectorAll('.vote-option').forEach(opt => {
+      opt.style.borderColor = '';
+      opt.style.borderWidth = '';
+    });
+    if(highlightChoice){
+      voteOptionsEl.querySelectorAll('.vote-option').forEach(opt => {
+        opt.classList.add('voted');
+        if(opt.dataset.game === highlightChoice){
+          opt.style.borderColor = 'var(--gold)';
+          opt.style.borderWidth = '2px';
+        }
+      });
+    }
+    return total;
+  }
+
+  function updateVoteStatus(total){
+    const alreadyVoted = localStorage.getItem(VOTED_FLAG_KEY);
+    const myChoice = localStorage.getItem(VOTED_CHOICE_KEY);
+    if(alreadyVoted){
+      voteStatusEl.textContent = 'คุณได้โหวต "' + myChoice + '" แล้ว — ผลรวมทั้งหมด ' + total + ' เสียง';
+      voteStatusEl.classList.add('success');
+      voteResetBtn.style.display = 'inline-block';
+    } else {
+      voteStatusEl.textContent = 'ผลรวมตอนนี้ ' + total + ' เสียง — แตะเพื่อโหวต';
+      voteStatusEl.classList.remove('success');
+      voteResetBtn.style.display = 'none';
+    }
+  }
+
+  function initVotesListener(){
+    if(!firebaseReady) return;
+    VOTE_DOC_REF().onSnapshot((doc) => {
+      const data = doc.exists ? doc.data() : {};
+      const counts = {};
+      games.forEach(g => counts[g] = data[g] || 0);
+      const alreadyVoted = localStorage.getItem(VOTED_FLAG_KEY);
+      const myChoice = localStorage.getItem(VOTED_CHOICE_KEY);
+      const total = renderVotes(counts, alreadyVoted ? myChoice : null);
+      updateVoteStatus(total);
+    }, (err) => {
+      console.error('Firestore listen error:', err);
+      voteStatusEl.textContent = 'ไม่สามารถโหลดผลโหวตได้ ตรวจสอบ Firestore Rules';
+    });
+  }
+
+  voteOptionsEl.addEventListener('click', async (e) => {
+    if(!firebaseReady){
+      voteStatusEl.textContent = 'ระบบโหวตยังไม่พร้อมใช้งาน (ยังไม่ตั้งค่า Firebase)';
+      return;
+    }
+    const opt = e.target.closest('.vote-option');
+    if(!opt) return;
+    if(localStorage.getItem(VOTED_FLAG_KEY)) return; // already voted, ignore clicks
+
+    const game = opt.dataset.game;
+    voteStatusEl.textContent = 'กำลังบันทึกโหวต...';
+
+    try{
+      await VOTE_DOC_REF().set(
+        { [game]: firebase.firestore.FieldValue.increment(1) },
+        { merge: true }
+      );
+      localStorage.setItem(VOTED_FLAG_KEY, '1');
+      localStorage.setItem(VOTED_CHOICE_KEY, game);
+      // onSnapshot listener จะอัปเดตหน้าจอให้เองอัตโนมัติ
+    }catch(err){
+      console.error('Vote write error:', err);
+      voteStatusEl.textContent = 'บันทึกไม่สำเร็จ ลองอีกครั้งนะ';
+    }
+  });
+
+  voteResetBtn.addEventListener('click', () => {
+    localStorage.removeItem(VOTED_FLAG_KEY);
+    localStorage.removeItem(VOTED_CHOICE_KEY);
+    voteOptionsEl.querySelectorAll('.vote-option').forEach(opt => {
+      opt.classList.remove('voted');
+      opt.style.borderColor = '';
+      opt.style.borderWidth = '';
+    });
+    voteResetBtn.style.display = 'none';
+    voteStatusEl.textContent = 'เลือกตัวเลือกใหม่ได้เลย';
+    voteStatusEl.classList.remove('success');
+  });
+
+  initVotesListener();
+
+  // ===== SURVEY (Firestore, real-time comments) =====
+  const surveyInput = document.getElementById('surveyInput');
+  const surveySubmitBtn = document.getElementById('surveySubmitBtn');
+  const surveyListEl = document.getElementById('surveyList');
+  const SURVEY_COLLECTION = () => db.collection('lin67_campaign_comments');
+
+  function renderComments(snapshot){
+    surveyListEl.innerHTML = '';
+    if(snapshot.empty){
+      surveyListEl.innerHTML = '<div class="survey-empty">ยังไม่มีความเห็น เป็นคนแรกได้เลย</div>';
+      return;
+    }
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const div = document.createElement('div');
+      div.className = 'survey-item';
+      div.textContent = data.text || '';
+      surveyListEl.appendChild(div);
+    });
+  }
+
+  function initSurveyListener(){
+    if(!firebaseReady){
+      surveyListEl.innerHTML = '<div class="survey-empty">ระบบความเห็นยังไม่พร้อมใช้งาน (ยังไม่ตั้งค่า Firebase)</div>';
+      return;
+    }
+    SURVEY_COLLECTION().orderBy('createdAt', 'desc').limit(50).onSnapshot((snapshot) => {
+      renderComments(snapshot);
+    }, (err) => {
+      console.error('Firestore comments listen error:', err);
+      surveyListEl.innerHTML = '<div class="survey-empty">โหลดความเห็นไม่สำเร็จ</div>';
+    });
+  }
+
+  surveySubmitBtn.addEventListener('click', async () => {
+    if(!firebaseReady){
+      alert('ระบบความเห็นยังไม่พร้อมใช้งาน (ยังไม่ตั้งค่า Firebase)');
+      return;
+    }
+    const text = surveyInput.value.trim();
+    if(!text) return;
+    surveySubmitBtn.disabled = true;
+    surveySubmitBtn.textContent = 'กำลังส่ง...';
+    try{
+      await SURVEY_COLLECTION().add({
+        text: text,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      surveyInput.value = '';
+      // onSnapshot listener จะอัปเดตรายการให้เองอัตโนมัติ
+    }catch(err){
+      console.error('Survey submit error:', err);
+      alert('ส่งความเห็นไม่สำเร็จ ลองใหม่อีกครั้ง');
+    }
+    surveySubmitBtn.disabled = false;
+    surveySubmitBtn.textContent = 'ส่งความเห็น';
+  });
+
+  initSurveyListener();
+</script>
+
+</body>
+</html>
